@@ -1,0 +1,31 @@
+## ## ==================================================================
+## NOTE:
+## [28/04/2025]
+## -- GOAL: Mục đích là tạo ra 1 base images để làm debug tools trên GKE.
+## -- FORK FROM: https://github.com/nicolaka/netshoot
+## -- ==> https://vquangna2@github.com/vquangna2/netshoot.git
+## -- CHANGELOG:
+##      + CHANGE BASE IMAGE TO google/cloud-sdk:519.0.0-alpine ==> GET gcloud-sdk
+## -- OUTPUT:
+##      ==> IMAGE DockerHub (Public): vegacandle/netshoot:v2
+## ==================================================================
+
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+  hub_login:
+    cmds:
+      - docker login --username vegacandle --password ${LOCAL_DOCKER_HUB_VEGA}
+  image_gcp_build:
+    cmds:
+      - docker build -t vegacandle/netshoot:{{.IMAGE_TAG}} -f Dockerfile_gcp_sdk .
+    vars:
+      IMAGE_TAG: v2
+  image_gcp_push:
+    cmds:
+      - docker push vegacandle/netshoot:{{.IMAGE_TAG}}
+    vars:
+      IMAGE_TAG: v2
